@@ -1,55 +1,64 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "filesystem.h"
 
 int main() {
-    FileSystem fs;
+    printf("=== Демонстрация файловой системы ===\n\n");
     
-    // Инициализация файловой системы
-    if (initialize_filesystem(&fs) != 0) {
-        printf("Ошибка инициализации файловой системы!\n");
+    // 1. Открываем/создаем файловую систему
+    FILE* fs_file = open_filesystem("pseudofs.disk");
+    if (fs_file == NULL) {
+        printf("Ошибка открытия файловой системы!\n");
         return 1;
     }
     
-    printf("Демонстрация работы файловой системы:\n\n");
+    // 2. Инициализируем систему в памяти
+    FileSystem fs;
+    initialize_filesystem(&fs);
     
-    // Создание файлов
-    printf("1. Создаем файлы...\n");
-    create_new_file(&fs, "readme.txt", "Это файл с инструкциями");
+    // 3. Создаем файлы
+    printf("\n1. Создаем файлы...\n");
+    create_new_file(&fs, "document.txt", "Это содержимое документа");
+    create_new_file(&fs, "readme.txt", "Инструкция по использованию");
     create_new_file(&fs, "config.cfg", "setting=value\nmode=debug");
-    create_new_file(&fs, "hello.txt", "Hello, World!");
     
-    // Вывод списка файлов
+    // 4. Просматриваем список файлов
+    printf("\n2. Список файлов:\n");
     list_files(&fs);
-    printf("\n");
     
-    // Чтение содержимого файла
-    printf("2. Читаем содержимое файла hello.txt:\n");
-    char buffer[MAX_CONTENT_LENGTH];
-    if (read_file_content(&fs, "hello.txt", buffer) == 0) {
-        printf("Содержимое: %s\n", buffer);
-    } else {
-        printf("Файл не найден!\n");
+    // 5. Просматриваем содержимое файла
+    printf("\n3. Просмотр содержимого:\n");
+    char* content = view_file("document.txt");
+    if (content != NULL) {
+        printf("Содержимое document.txt: %s\n", content);
+        free(content); // Не забываем освободить память
     }
-    printf("\n");
     
-    // Изменение файла
-    printf("3. Изменяем файл hello.txt...\n");
-    modify_file(&fs, "hello.txt", "Hello, Modified World!");
+    // 6. Изменяем файл
+    printf("\n4. Изменяем файл...\n");
+    modify_file(&fs, "document.txt", "Обновленное содержимое документа");
     
-    // Проверяем изменение
-    printf("Проверяем изменение:\n");
-    if (read_file_content(&fs, "hello.txt", buffer) == 0) {
-        printf("Новое содержимое: %s\n", buffer);
+    // 7. Проверяем изменение
+    content = view_file("document.txt");
+    if (content != NULL) {
+        printf("Новое содержимое: %s\n", content);
+        free(content);
     }
-    printf("\n");
     
-    // Удаление файла
-    printf("4. Удаляем файл config.cfg...\n");
-    delete_file(&fs, "config.cfg");
+    // 8. Удаляем файл
+    printf("\n5. Удаляем файл...\n");
+    int result = delete_file("config.cfg");
+    if (result == 0) {
+        printf("Файл config.cfg успешно удален\n");
+    }
     
-    // Финальный список файлов
-    printf("Финальный список файлов:\n");
+    // 9. Финальный список
+    printf("\n6. Финальный список файлов:\n");
     list_files(&fs);
+    
+    // 10. Закрываем файловую систему
+    printf("\n7. Закрываем систему...\n");
+    close_filesystem(fs_file);
     
     return 0;
 }
