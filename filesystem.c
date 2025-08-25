@@ -4,9 +4,7 @@
 #include <stdbool.h>
 #include "filesystem.h"
 
-/**
- * 1.1. Открыть или создать файл файловой системы
- */
+/* 1.1. Открыть или создать файл файловой системы */
 FILE* open_filesystem(const char* filename) {
     FILE* file = fopen(filename, "a+");
     if (file == NULL) {
@@ -17,9 +15,7 @@ FILE* open_filesystem(const char* filename) {
     return file;
 }
 
-/**
- * 1.2. Посмотреть содержимое файла
- */
+/* 1.2. Посмотреть содержимое файла */
 char* view_file(const char* target_filename) {
     FILE* fs = fopen(FILESYSTEM_NAME, "r");
     if (fs == NULL) {
@@ -58,9 +54,7 @@ char* view_file(const char* target_filename) {
     return content;
 }
 
-/**
- * 1.3. Удалить файл из файловой системы
- */
+/* 1.3. Удалить файл из файловой системы */
 int delete_file(const char* target_filename) {
     FILE* fs = fopen(FILESYSTEM_NAME, "r");
     if (fs == NULL) {
