@@ -43,6 +43,6 @@ int — 0 при успехе.
 **Возвращаемое значение:** int — 0 при успешном создании, -1 при ошибке.
 
 **Пример использования:**
-``FileSystem fs;
+```FileSystem fs;
 initialize_filesystem(&fs);
-create_new_file(&fs, "test.txt", "Hello World!");``
+create_new_file(&fs, "test.txt", "Hello World!");```
