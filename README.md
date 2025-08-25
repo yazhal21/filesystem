@@ -45,4 +45,4 @@ int — 0 при успехе.
 **Пример использования:**
 ```FileSystem fs;
 initialize_filesystem(&fs);
-create_new_file(&fs, "test.txt", "Hello World!");```
+create_new_file(&fs, "test.txt", "Hello World!");
