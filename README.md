@@ -42,8 +42,4 @@
 
 **Возвращаемое значение:** int — 0 при успешном создании, -1 при ошибке.
 
-**Пример использования:**
-```
-FileSystem fs;
-initialize_filesystem(&fs);
-create_new_file(&fs, "test.txt", "Hello World!");
+**Пример использования:** `create_new_file(&fs, "test.txt", "Hello World!");`
