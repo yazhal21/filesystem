@@ -163,3 +163,70 @@ void list_files() {
     
     fclose(fs);
 }
+
+/* Создает новый файл в файловой системе */
+int create_new_file(FileSystem* fs, const char* filename, const char* content) {
+    if (fs == NULL || filename == NULL || content == NULL) {
+        return -1;
+    }
+    
+    // Проверяем, не существует ли уже файл с таким именем
+    for (int i = 0; i < fs->file_count; i++) {
+        if (strcmp(fs->files[i].name, filename) == 0) {
+            return -1; // Файл уже существует
+        }
+    }
+    
+    // Проверяем, не превышен ли лимит файлов
+    if (fs->file_count >= MAX_FILES) {
+        return -1;
+    }
+    
+    // Создаем новый файл
+    File new_file;
+    strncpy(new_file.name, filename, MAX_FILENAME_LENGTH - 1);
+    new_file.name[MAX_FILENAME_LENGTH - 1] = '\0';
+    
+    strncpy(new_file.content, content, MAX_CONTENT_LENGTH - 1);
+    new_file.content[MAX_CONTENT_LENGTH - 1] = '\0';
+    
+    new_file.size = strlen(content);
+    
+    // Добавляем файл в систему
+    fs->files[fs->file_count] = new_file;
+    fs->file_count++;
+    
+    return 0;
+}
+
+/* Изменяет содержимое существующего файла */
+int modify_file(FileSystem* fs, const char* filename, const char* new_content) {
+    if (fs == NULL || filename == NULL || new_content == NULL) {
+        return -1;
+    }
+    
+    // Ищем файл для изменения
+    int file_index = -1;
+    for (int i = 0; i < fs->file_count; i++) {
+        if (strcmp(fs->files[i].name, filename) == 0) {
+            file_index = i;
+            break;
+        }
+    }
+    
+    if (file_index == -1) {
+        return -1; // Файл не найден
+    }
+    
+    // Сохраняем старое содержимое для отката (опционально)
+    char old_content[MAX_CONTENT_LENGTH];
+    strncpy(old_content, fs->files[file_index].content, MAX_CONTENT_LENGTH - 1);
+    old_content[MAX_CONTENT_LENGTH - 1] = '\0';
+    
+    // Обновляем содержимое файла
+    strncpy(fs->files[file_index].content, new_content, MAX_CONTENT_LENGTH - 1);
+    fs->files[file_index].content[MAX_CONTENT_LENGTH - 1] = '\0';
+    fs->files[file_index].size = strlen(new_content);
+    
+    return 0;
+}
