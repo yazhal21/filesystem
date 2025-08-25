@@ -32,3 +32,17 @@ int — 0 при успехе.
 -1 — при ошибке.
 
 **Пример:** `int result = delete_file("old_file.txt");`
+
+`create_new_file` — создает новый файл в файловой системе.
+
+**Параметры:**
+- FileSystem* fs — указатель на структуру файловой системы
+- const char* filename — имя создаваемого файла
+- const char* content — содержимое файла
+
+**Возвращаемое значение:** int — 0 при успешном создании, -1 при ошибке.
+
+**Пример использования:**
+``FileSystem fs;
+initialize_filesystem(&fs);
+create_new_file(&fs, "test.txt", "Hello World!");``
